@@ -29,6 +29,7 @@ create_books_table()
 def index():
     return 'Welcome to Book API!'
 
+# Function to add data into the table
 @app.route('/books', methods=['POST'])
 def create_book():
 
@@ -49,11 +50,11 @@ def create_book():
     if  not isinstance(data['title'], str) or \
         not isinstance(data['author'], str) or \
         not isinstance(data['ISBN'], str) or \
-        not isinstance(data['publicatoin_date'], str):
+        not isinstance(data['publication_date'], str):
             return jsonify({'error' : "Incorrect data types"}), 400
 
     # Insert the new book entry into the database
-    conn = sqlite3.connect('dataabase/books.db')
+    conn = sqlite3.connect('database/books.db')
     cursor = conn.cursor()
     
     cursor.execute("""
@@ -70,7 +71,8 @@ def create_book():
     conn.close()
 
     return jsonify({"id": book_id}), 201
-
+ 
+# Function to get all available books from table
 @app.route('/books', methods=['GET'])
 def get_all_books():
     conn = sqlite3.connect('database/books.db')
@@ -95,6 +97,7 @@ def get_all_books():
 
     return jsonify(book_list), 200
 
+# Function to get a particular book from table
 @app.route('/books/<int:id>', methods=['GET'])
 def get_book_by_id(id):
     conn = sqlite3.connect('database/books.db')
@@ -118,6 +121,7 @@ def get_book_by_id(id):
     else:
         return jsonify({"error": "Book not found"}), 404
 
+# Function to update a book from table
 @app.route('/books/<int:id>', methods=['PUT'])
 def update_book(id):
     conn = sqlite3.connect('database/books.db')
@@ -147,6 +151,7 @@ def update_book(id):
 
     return jsonify({"message": "Book updated successfully"}), 200
 
+# Function to delete a book from table
 @app.route('/books/<int:id>', methods=['DELETE'])
 def delete_book(id):
     conn = sqlite3.connect('database/books.db')
@@ -170,6 +175,3 @@ def delete_book(id):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
